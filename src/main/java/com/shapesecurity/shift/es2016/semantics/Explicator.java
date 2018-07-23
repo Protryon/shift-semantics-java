@@ -456,7 +456,7 @@ public class Explicator {
 						NodeWithValue keyAssign = new VariableAssignment(keys, new Keys(object), false);
 						NodeWithValue indexAssign = new VariableAssignment(counter, new LiteralNumber(0), false);
 						Loop loop = new Loop(
-							new Block(ImmutableList.<Node>of(
+							new Block(ImmutableList.of(
 								new IfElse(
 									new RelationalComparison(
 										RelationalComparison.Operator.LessThan,
@@ -465,24 +465,22 @@ public class Explicator {
 									),
 									new Block(Void.INSTANCE),
 									new Block(breakNode)
-								))
-								.append(ImmutableList.of(
-									new IfElse(
-										new In(new MemberAccess(keys, counter), object),
-										new Block(ImmutableList.of(
-											makeForInUpdate(forInStatement.left, keys, counter, strict),
-											explicateStatement(forInStatement.body, strict)
-										)),
-										new Block(Void.INSTANCE)
-									),
-									innerTarget,
-									new VariableAssignment(
-										counter,
-										new FloatMath(FloatMath.Operator.Plus, counter, new LiteralNumber(1)),
-										false
-									)
-								))
-							)
+								),
+								new IfElse(
+									new In(new MemberAccess(keys, counter), object),
+									new Block(ImmutableList.of(
+										makeForInUpdate(forInStatement.left, keys, counter, strict),
+										explicateStatement(forInStatement.body, strict)
+									)),
+									new Block(Void.INSTANCE)
+								),
+								innerTarget,
+								new VariableAssignment(
+									counter,
+									new FloatMath(FloatMath.Operator.Plus, counter, new LiteralNumber(1)),
+									false
+								)
+							))
 						);
 						Node ifStatement = new IfElse(
 							nullTest,
